@@ -8,8 +8,7 @@ class CameraHolder: public QObject
 {
    Q_OBJECT
 public:
-   void setCamera(Qt3DCore::QCamera * camera);
-public slots:
+   CameraHolder(Qt3DCore::QCamera * camera);
    void resetCamera();
 
 private:

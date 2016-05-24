@@ -4,6 +4,7 @@
 #
 #-------------------------------------------------
 
+CONFIG += c++11
 QT       += 3dcore 3drender 3dinput 3dlogic
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -14,14 +15,20 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     mainwindow.cpp \
-    viewer.cpp \
-    transformer.cpp \
-    cameraholder.cpp
+    cameraholder.cpp \
+    mainwidget.cpp \
+    previewwidget.cpp \
+    presenter.cpp \
+    sceneview.cpp \
+    model.cpp
 
 HEADERS  += \
     mainwindow.hpp \
-    viewer.hpp \
-    transformer.hpp \
-    cameraholder.hpp
+    cameraholder.hpp \
+    mainwidget.hpp \
+    previewwidget.hpp \
+    presenter.hpp \
+    sceneview.hpp \
+    model.hpp
 
 DISTFILES +=

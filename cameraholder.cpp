@@ -1,10 +1,9 @@
 #include "cameraholder.hpp"
 #include <QCameraLens>
 
-void CameraHolder::setCamera(Qt3DCore::QCamera * camera) {
-   m_camera = camera;
-   resetCamera();
-}
+CameraHolder::CameraHolder(Qt3DCore::QCamera * camera):
+   m_camera(camera)
+{}
 
 void CameraHolder::resetCamera() {
    m_camera->setProjectionType(Qt3DCore::QCameraLens::PerspectiveProjection);
