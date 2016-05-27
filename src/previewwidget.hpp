@@ -8,6 +8,10 @@
 
 #include <memory>
 
+/*
+ * This class represents the preview window.
+ * It encapsulates the MVP pattern implementation used to control the UI.
+ */
 class PreviewWidget : public QWidget
 {
    Q_OBJECT

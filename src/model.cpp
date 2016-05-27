@@ -4,28 +4,26 @@
 #include <Qt3DRender/qcylindermesh.h>
 #include <Qt3DCore/qtransform.h>
 
+#include <memory>
+
 Model::Model()
    : m_bed(new Qt3DCore::QEntity())
 {
 
-   Qt3DRender::QPlaneMesh * cube = new Qt3DRender::QPlaneMesh();
-   cube->setWidth(20.0f);
-   cube->setHeight(20.0f);
-   cube->setMeshResolution(QSize(20,20));
-   m_bed->addComponent(cube);
+   // Create a Plan mesh to represents a virtual bed.
+   std::unique_ptr<Qt3DRender::QPlaneMesh> plan(new Qt3DRender::QPlaneMesh());
+   plan->setWidth(20.0f);
+   plan->setHeight(20.0f);
+   plan->setMeshResolution(QSize(20,20));
+   m_bed->addComponent(plan.release());
 
-   Qt3DCore::QTransform *cylinderTransform = new Qt3DCore::QTransform;
-   cylinderTransform->setScale(1.0f);
-   cylinderTransform->setRotation(QQuaternion::fromAxisAndAngle(QVector3D(1, 0, 0), 90.0f));
-   cylinderTransform->setTranslation(QVector3D{0,0,10});
-
-   m_material = new Qt3DRender::QPhongMaterial();
-   m_material->setAmbient(Qt::red);
-   m_material->setDiffuse(Qt::red);
-   m_material->setSpecular(Qt::black);
-   m_material->setEnabled(true);
-
-   m_bed->addComponent(m_material);
+   // Add some material details to it.
+   std::unique_ptr<Qt3DRender::QPhongMaterial> material(new Qt3DRender::QPhongMaterial());
+   material->setAmbient(Qt::red);
+   material->setDiffuse(Qt::red);
+   material->setSpecular(Qt::black);
+   material->setEnabled(true);
+   m_bed->addComponent(material.release());
 }
 
 Qt3DCore::QEntity * Model::getBedEntity() const {

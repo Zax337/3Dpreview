@@ -7,6 +7,10 @@
 
 #include <memory>
 
+/*
+ * This class' purpose is to perform business logic and update the UI accordingly.
+ * Instances don't get the ownership over the view they modify.
+ */
 class Presenter
 {
 public:

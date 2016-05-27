@@ -11,6 +11,9 @@
 
 class Presenter;
 
+/*
+ * This class represents the UI part of the preview screen.
+ */
 class SceneView {
 public:
    SceneView(QWidget * parent, Presenter * presenter);

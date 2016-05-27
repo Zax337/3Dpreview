@@ -9,6 +9,8 @@
 #include <Qt3DRender/QFrameGraph>
 #include <Qt3DRender/QForwardRenderer>
 
+#include <memory>
+
 SceneView::SceneView(QWidget * parent, Presenter * presenter)
    : m_presenter(presenter)
 {
@@ -23,36 +25,38 @@ SceneView::SceneView(QWidget * parent, Presenter * presenter)
    data.insert(QStringLiteral("eventSource"), QVariant::fromValue(&m_view));
    m_engine.setData(data);
 
-   auto render = new Qt3DRender::QRenderAspect();
-   m_engine.registerAspect(render);
+   m_engine.registerAspect(new Qt3DRender::QRenderAspect());
+   // Create and register engine in charge of user interacton.
    Qt3DInput::QInputAspect *input = new Qt3DInput::QInputAspect();
    m_engine.registerAspect(input);
 
    // Camera
-   Qt3DCore::QCamera * camera = new Qt3DCore::QCamera();
+   std::unique_ptr<Qt3DCore::QCamera> camera(new Qt3DCore::QCamera());
    camera->setObjectName(QStringLiteral("cameraEntity"));
-   input->setCamera(camera);
-   m_cameraHolder.reset(new CameraHolder(camera));
+   input->setCamera(camera.get());
+   m_cameraHolder.reset(new CameraHolder(camera.get()));
 
    // Root entity
-   Qt3DCore::QEntity *rootEntity = new Qt3DCore::QEntity();
+   std::unique_ptr<Qt3DCore::QEntity> rootEntity(new Qt3DCore::QEntity());
+
    // FrameGraph
-   Qt3DRender::QFrameGraph *frameGraph = new Qt3DRender::QFrameGraph();
-   Qt3DRender::QForwardRenderer *forwardRenderer = new Qt3DRender::QForwardRenderer();
+   std::unique_ptr<Qt3DRender::QFrameGraph> frameGraph(new Qt3DRender::QFrameGraph());
+   std::unique_ptr<Qt3DRender::QForwardRenderer> forwardRenderer(new Qt3DRender::QForwardRenderer());
 
    // TechiqueFilter and renderPassFilter are not implement yet
-   forwardRenderer->setCamera(camera);
+   forwardRenderer->setCamera(camera.get());
    forwardRenderer->setClearColor(Qt::lightGray);
 
-   frameGraph->setActiveFrameGraph(forwardRenderer);
+   frameGraph->setActiveFrameGraph(forwardRenderer.release());
 
    // Setting the FrameGraph
-   rootEntity->addComponent(frameGraph);
+   rootEntity->addComponent(frameGraph.release());
 
    // Set root object of the scene
-   m_engine.setRootEntity(rootEntity);
+   m_engine.setRootEntity(rootEntity.release());
    resetScene();
    resetView();
+   camera.release();
 }
 
 void SceneView::resetScene() {
